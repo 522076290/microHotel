@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HotelRoomsMapper">
+    
+    <resultMap type="HotelRooms" id="HotelRoomsResult">
+        <result property="id"    column="id"    />
+        <result property="roomNumber"    column="room_number"    />
+        <result property="title"    column="title"    />
+        <result property="type"    column="type"    />
+        <result property="price"    column="price"    />
+        <result property="status"    column="status"    />
+        <result property="description"    column="description"    />
+        <result property="image"    column="image"    />
+    </resultMap>
+
+    <sql id="selectHotelRoomsVo">
+        select id, room_number, title, type, price, status, description, image from hotel_rooms
+    </sql>
+
+    <select id="selectHotelRoomsList" parameterType="HotelRooms" resultMap="HotelRoomsResult">
+        <include refid="selectHotelRoomsVo"/>
+        <where>  
+            <if test="roomNumber != null  and roomNumber != ''"> and room_number = #{roomNumber}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+        </where>
+    </select>
+    
+    <select id="selectHotelRoomsById" parameterType="Long" resultMap="HotelRoomsResult">
+        <include refid="selectHotelRoomsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHotelRooms" parameterType="HotelRooms" useGeneratedKeys="true" keyProperty="id">
+        insert into hotel_rooms
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomNumber != null and roomNumber != ''">room_number,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="price != null">price,</if>
+            <if test="status != null">status,</if>
+            <if test="description != null">description,</if>
+            <if test="image != null">image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomNumber != null and roomNumber != ''">#{roomNumber},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="price != null">#{price},</if>
+            <if test="status != null">#{status},</if>
+            <if test="description != null">#{description},</if>
+            <if test="image != null">#{image},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHotelRooms" parameterType="HotelRooms">
+        update hotel_rooms
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roomNumber != null and roomNumber != ''">room_number = #{roomNumber},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="image != null">image = #{image},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHotelRoomsById" parameterType="Long">
+        delete from hotel_rooms where id = #{id}
+    </delete>
+
+    <delete id="deleteHotelRoomsByIds" parameterType="String">
+        delete from hotel_rooms where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

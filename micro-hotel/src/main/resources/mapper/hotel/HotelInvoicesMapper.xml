@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HotelInvoicesMapper">
+    
+    <resultMap type="HotelInvoices" id="HotelInvoicesResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="totalRoomCharge"    column="total_room_charge"    />
+        <result property="additionalCharges"    column="additional_charges"    />
+        <result property="discount"    column="discount"    />
+        <result property="tax"    column="tax"    />
+        <result property="totalDue"    column="total_due"    />
+        <result property="paymentStatus"    column="payment_status"    />
+        <result property="paymentDate"    column="payment_date"    />
+        <result property="issueDate"    column="issue_date"    />
+    </resultMap>
+
+    <sql id="selectHotelInvoicesVo">
+        select id, order_id, customer_id, total_room_charge, additional_charges, discount, tax, total_due, payment_status, payment_date, issue_date from hotel_invoices
+    </sql>
+
+    <select id="selectHotelInvoicesList" parameterType="HotelInvoices" resultMap="HotelInvoicesResult">
+        <include refid="selectHotelInvoicesVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="totalRoomCharge != null "> and total_room_charge = #{totalRoomCharge}</if>
+            <if test="additionalCharges != null "> and additional_charges = #{additionalCharges}</if>
+            <if test="discount != null "> and discount = #{discount}</if>
+            <if test="tax != null "> and tax = #{tax}</if>
+            <if test="totalDue != null "> and total_due = #{totalDue}</if>
+            <if test="paymentStatus != null "> and payment_status = #{paymentStatus}</if>
+            <if test="paymentDate != null "> and payment_date = #{paymentDate}</if>
+            <if test="issueDate != null "> and issue_date = #{issueDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectHotelInvoicesById" parameterType="Long" resultMap="HotelInvoicesResult">
+        <include refid="selectHotelInvoicesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHotelInvoices" parameterType="HotelInvoices" useGeneratedKeys="true" keyProperty="id">
+        insert into hotel_invoices
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="totalRoomCharge != null">total_room_charge,</if>
+            <if test="additionalCharges != null">additional_charges,</if>
+            <if test="discount != null">discount,</if>
+            <if test="tax != null">tax,</if>
+            <if test="totalDue != null">total_due,</if>
+            <if test="paymentStatus != null">payment_status,</if>
+            <if test="paymentDate != null">payment_date,</if>
+            <if test="issueDate != null">issue_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="totalRoomCharge != null">#{totalRoomCharge},</if>
+            <if test="additionalCharges != null">#{additionalCharges},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="tax != null">#{tax},</if>
+            <if test="totalDue != null">#{totalDue},</if>
+            <if test="paymentStatus != null">#{paymentStatus},</if>
+            <if test="paymentDate != null">#{paymentDate},</if>
+            <if test="issueDate != null">#{issueDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHotelInvoices" parameterType="HotelInvoices">
+        update hotel_invoices
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="totalRoomCharge != null">total_room_charge = #{totalRoomCharge},</if>
+            <if test="additionalCharges != null">additional_charges = #{additionalCharges},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="tax != null">tax = #{tax},</if>
+            <if test="totalDue != null">total_due = #{totalDue},</if>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="paymentDate != null">payment_date = #{paymentDate},</if>
+            <if test="issueDate != null">issue_date = #{issueDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHotelInvoicesById" parameterType="Long">
+        delete from hotel_invoices where id = #{id}
+    </delete>
+
+    <delete id="deleteHotelInvoicesByIds" parameterType="String">
+        delete from hotel_invoices where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

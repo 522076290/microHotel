@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HotelOrdersMapper">
+    
+    <resultMap type="HotelOrders" id="HotelOrdersResult">
+        <result property="id"    column="id"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="numOfRooms"    column="num_of_rooms"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="orderDate"    column="order_date"    />
+        <result property="status"    column="status"    />
+        <result property="merchantAcceptDate"    column="merchant_accept_date"    />
+        <result property="merchantAcceptStatus"    column="merchant_accept_status"    />
+        <result property="customerRating"    column="customer_rating"    />
+        <result property="customerReview"    column="customer_review"    />
+        <result property="reviewDate"    column="review_date"    />
+    </resultMap>
+
+    <sql id="selectHotelOrdersVo">
+        select id, order_number, customer_id, room_id, start_date, end_date, num_of_rooms, total_price, order_date, status, merchant_accept_date, merchant_accept_status, customer_rating, customer_review, review_date from hotel_orders
+    </sql>
+
+    <select id="selectHotelOrdersList" parameterType="HotelOrders" resultMap="HotelOrdersResult">
+        <include refid="selectHotelOrdersVo"/>
+        <where>  
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="roomId != null "> and room_id = #{roomId}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="numOfRooms != null "> and num_of_rooms = #{numOfRooms}</if>
+            <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+            <if test="orderDate != null "> and order_date = #{orderDate}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="merchantAcceptDate != null "> and merchant_accept_date = #{merchantAcceptDate}</if>
+            <if test="merchantAcceptStatus != null "> and merchant_accept_status = #{merchantAcceptStatus}</if>
+            <if test="customerRating != null "> and customer_rating = #{customerRating}</if>
+            <if test="customerReview != null  and customerReview != ''"> and customer_review = #{customerReview}</if>
+            <if test="reviewDate != null "> and review_date = #{reviewDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectHotelOrdersById" parameterType="Long" resultMap="HotelOrdersResult">
+        <include refid="selectHotelOrdersVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHotelOrders" parameterType="HotelOrders" useGeneratedKeys="true" keyProperty="id">
+        insert into hotel_orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">order_number,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="numOfRooms != null">num_of_rooms,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="orderDate != null">order_date,</if>
+            <if test="status != null">status,</if>
+            <if test="merchantAcceptDate != null">merchant_accept_date,</if>
+            <if test="merchantAcceptStatus != null">merchant_accept_status,</if>
+            <if test="customerRating != null">customer_rating,</if>
+            <if test="customerReview != null">customer_review,</if>
+            <if test="reviewDate != null">review_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">#{orderNumber},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="numOfRooms != null">#{numOfRooms},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="orderDate != null">#{orderDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="merchantAcceptDate != null">#{merchantAcceptDate},</if>
+            <if test="merchantAcceptStatus != null">#{merchantAcceptStatus},</if>
+            <if test="customerRating != null">#{customerRating},</if>
+            <if test="customerReview != null">#{customerReview},</if>
+            <if test="reviewDate != null">#{reviewDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHotelOrders" parameterType="HotelOrders">
+        update hotel_orders
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">order_number = #{orderNumber},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="numOfRooms != null">num_of_rooms = #{numOfRooms},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="orderDate != null">order_date = #{orderDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="merchantAcceptDate != null">merchant_accept_date = #{merchantAcceptDate},</if>
+            <if test="merchantAcceptStatus != null">merchant_accept_status = #{merchantAcceptStatus},</if>
+            <if test="customerRating != null">customer_rating = #{customerRating},</if>
+            <if test="customerReview != null">customer_review = #{customerReview},</if>
+            <if test="reviewDate != null">review_date = #{reviewDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHotelOrdersById" parameterType="Long">
+        delete from hotel_orders where id = #{id}
+    </delete>
+
+    <delete id="deleteHotelOrdersByIds" parameterType="String">
+        delete from hotel_orders where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
