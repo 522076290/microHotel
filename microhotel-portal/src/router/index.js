@@ -67,6 +67,19 @@ export const constantRoutes = [
     redirect: 'index',
     children: [
       {
+        path: '/room-type/*',
+        component: () => import('@/views/roomtype'),
+        name: 'room-type',
+        meta: { title: '房间列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'index',
+    children: [
+      {
         path: 'index',
         component: () => import('@/views/index'),
         name: 'Index',

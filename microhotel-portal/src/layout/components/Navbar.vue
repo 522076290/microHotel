@@ -1,47 +1,70 @@
 <template>
-  <div class="navbar">
+  <div class="header">
     <div class="header-content">
-      <ul>
-        <li class="left-menu-item" @click="toggleSideBar">
-          <i class="el-icon-message">admin@libing.com</i>
-        </li>
-        <li class="left-menu-item" @click="toggleSideBar">
-          <i class="el-icon-phone">0591-8881-2888</i>
-        </li>
-        <li class="left-menu-item" @click="toggleSideBar">
-          <i class="el-icon-add-location">福建省福州市溪源宫路 200号</i>
-        </li>
-        <li class="left-menu-item" @click="toggleSideBar">
-          <i class="el-icon-postcard">邮编:200002</i>
-        </li>
-        <li class="right-menu-item">
-          <i class="el-icon-caret-right" @click="toregister">注册</i>
-        </li>
-        <li class="right-menu-item">
-          <i class="el-icon-user" @click="toLogin">登录</i>
-        </li>
-      </ul>
+      <!-- 顶部信息 -->
+      <div class="container">
+        <div class="links links-left">
+          <ul class="left-menu">
+            <li class="left-menu-item">
+              <a><i class="el-icon-message"></i> admin@liuyanzhao.com</a>
+            </li>
+            <li class="left-menu-item">
+              <a><i class="el-icon-phone"></i> 21-2327-2888</a>
+            </li>
+            <li class="left-menu-item">
+              <a><i class="el-icon-location"></i> 中国上海市中山东一路32号 邮编：200002</a>
+            </li>
+          </ul>
+        </div>
+        <div class="links links-right pull-right" v-if="!token">
+          <ul class="right-menu" v-if="!token">
+            <li class="right-menu-item" @click="toLogin">
+              <a> <i class="el-icon-user"></i> 登录</a>
+            </li>
+            <li class="right-menu-item" @click="toregister">
+              <a><i class="el-icon-caret-right"></i> 注册</a>
+            </li>
+          </ul>
+        </div>
+        <div class="links links-right pull-right" v-if="token">
+          <ul class="right-menu" >
+            <li class="right-menu-item" @click="toLogin">
+              <a> <i class="el-icon-user"></i>进入后台</a>
+            </li>
+            <li class="right-menu-item" @click="logout">
+              <a><i class="el-icon-caret-right" ></i> 退出</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="header-menu">
-      <a class="navbar-brand" href="/">
-        <img src="@/assets/images/logo.png" alt="">
-      </a>
-      <el-menu :default-active="`-1`" class="el-menu-demo" mode="horizontal" active-text-color="#fe5459">
-        <el-menu-item index="-1" @click="$router.push('/index')">首页</el-menu-item>
-        <!-- 遍历 data 数组，显示每个的 dictLabel -->
-        <el-menu-item v-for="dict in dict.type.hotel_room_type" 
-            :key="dict.value"
-            :index="dict.value"
-            @click="(navigateTo(dict.value))"> <!-- 动态路由路径 -->
-          {{ dict.label }}
-        </el-menu-item>
-      </el-menu>
+    <!-- 导航栏 -->
+    <div class="navbar">
+      <div class="content">
+        <div class="navbar-header">
+          <a href="/">
+            <img src="@/assets/images/logo.png" alt="Logo">
+          </a>
+        </div>
+        <div class="navbar-menu">
+          <el-menu :default-active="`-1`" class="el-menu-demo" mode="horizontal" active-text-color="#fe5459">
+            <el-menu-item index="-1" @click="$router.push('/index')">首页</el-menu-item>
+            <el-menu-item v-for="dict in dict.type.hotel_room_type" :key="dict.value" :index="dict.value"
+              @click="navigateTo(dict.value)">
+              {{ dict.label }}
+            </el-menu-item>
+          </el-menu>
+        </div>
+      </div>
+
     </div>
   </div>
+
 </template>
 
+
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters,mapState } from 'vuex'
 import TopNav from '@/components/TopNav'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
@@ -65,6 +88,9 @@ export default {
       'avatar',
       'device'
     ]),
+    ...mapState({
+      token: state => state.user.token
+    }),
     setting: {
       get() {
         return this.$store.state.settings.showSettings
@@ -93,9 +119,9 @@ export default {
       this.$router.push('/login')
     },
     handleSelect(index) {
-    console.log('Selected menu item index:', index);
-  },
-  navigateTo(value) {
+      console.log('Selected menu item index:', index);
+    },
+    navigateTo(value) {
       // 假设路由基地址为 /room-type
       const route = `/room-type/${value}`;
       this.$router.push(route); // 跳转到对应路由
@@ -116,76 +142,138 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.navbar {
+.header {
   width: 100%;
-  height: 125px;
-  overflow: hidden;
-  position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-  border-bottom: 1px solid hsla(0, 0%, 100%, 0.2);
-  display: flex;
-  flex-direction: column; /* 让 header-content 和 header-menu 垂直排列 */
-  align-items: center; /* 将子元素居中 */
+  position: absolute;
+  z-index: 10;
 
   .header-content {
-    width: 100%;
-    max-width: 970px; /* 限制宽度，保持居中 */
-    height: 44px;
+    border-bottom: 1px solid hsla(0, 0%, 100%, .2);
+    height: 40px;
+    /* 顶部信息栏高度 */
+    background: rgba(0, 0, 0, 0);
+    /* 背景为半透明黑色 */
+    color: #fff;
+    /* 文字颜色为白色 */
     display: flex;
-    justify-content: space-between; /* 左右两部分对齐 */
+    justify-content: space-between;
+    /* 左右布局 */
     align-items: center;
+    /* 垂直居中 */
+    padding: 0 20px;
+    /* 左右内边距 */
 
-    .left-menu-item {
+    .links {
       display: inline-block;
-      padding: 0 8px;
-      font-size: 16px;
-      color: #5a5e66;
-      vertical-align: middle;
     }
 
-    .left-menu-item:hover {
-      cursor: pointer;
-      color: #fe5459;
-    }
+    
 
-    .right-menu-item {
-      display: inline-block;
-      padding: 0 8px;
-      font-size: 16px;
-      color: #5a5e66;
-      vertical-align: middle;
-    }
+    /* 顶部信息区域 */
+    .container {
+      //居中
+      margin: 0 auto;
+      width: 970px;
+      height: 40px;
+      ul {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        /* 去掉列表样式 */
+      }
+      .pull-right {
+        margin-left: auto; /* 将右侧内容推到右边 */
+        display: flex;
+        align-items: center;
+        }
+      .left-menu,
+      .right-menu {
+        height: 40px;
+      }
 
-    .right-menu-item:hover {
-      cursor: pointer;
-      color: #fe5459;
+      .left-menu-item,
+      .right-menu-item {
+        margin-right: 20px;
+        height: 100%;
+        display: inline-block;
+        text-align: center;
+        /* 每个项之间的间距 */
+        font-size: 16px;
+        /* 字体大小 */
+        color: #fff;
+        border-left: 1px solid hsla(0, 0%, 100%, .2);
+
+        a{
+          color: #fff;
+          text-decoration: none;
+          margin-left: 10px;
+          line-height: 40px;
+        }
+      }
+
+      .left-menu-item:hover,
+      .right-menu-item:hover {
+        color: #fe5459;
+        /* 鼠标悬停时字体变蓝色 */
+      }
     }
   }
 
-  .header-menu {
+  /* 导航栏区域 */
+  .navbar {
+    //居中
+    margin: 0 auto;
     width: 100%;
-    max-width: 940px; /* 限制菜单的宽度 */
     height: 80px;
+    /* 导航栏高度 */
+    background: rgba(0, 0, 0, 0);
+    /* 背景为半透明黑色 */
     display: flex;
-    justify-content: space-between; /* 左对齐 Logo，右对齐菜单 */
     align-items: center;
+    /* 垂直居中 */
+    justify-content: center;
+    /* 内容居中 */
     padding: 0 20px;
 
-    .navbar-brand {
-      display: inline-block;
+    /* 内边距 */
+    .content {
+      width: 970px;
+    }
+
+    .navbar-header {
+      float: left;
+    }
+    .navbar-menu {
+      float: right;
     }
 
     .el-menu {
-      flex: 1; /* 占据剩余空间 */
-      margin-left: 20px;
+      flex: 1;
+      /* 占据剩余空间 */
+      display: flex;
+      justify-content: center;
+      /* 菜单项居中 */
+      background: transparent;
+      /* 菜单背景透明 */
+      border-bottom: none;
+      /* 去掉底部边框 */
+    }
+
+    .el-menu-item {
+      font-size: 16px;
+      /* 菜单字体大小 */
+      color: #fff;
+      /* 菜单字体颜色 */
+      padding: 0 15px;
+      /* 增加菜单项间距 */
+    }
+
+    .el-menu-item:hover {
+      color: #fe5459 !important;
+      /* 鼠标悬停时字体变红 */
     }
   }
 }
-
-/* 自定义 el-menu-item 的 hover 样式 */
-.el-menu-item:hover {
-  color: #ff5252 !important; /* 自定义 hover 状态字体颜色 */
-}
-
 </style>

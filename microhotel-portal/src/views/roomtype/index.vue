@@ -188,8 +188,16 @@ export default {
       // Disable dates before today
       return date < new Date(new Date().setHours(0, 0, 0, 0));
     },
+
+    /** 获取当前路由最后的数字 */
+    getLastNumber() {
+      const path = this.$route.path;
+      const lastNumber = path.match(/\d+$/);
+      return lastNumber ? parseInt(lastNumber[0]) : 1;
+    },
   },
   created() {
+    this.queryParams.type = this.getLastNumber();
     this.getList();
   },
   computed: {
@@ -219,7 +227,7 @@ export default {
 
 /* 背景图块 */
 .breadcrumb-outer {
-  background-image: url('../assets/images/header-bgckground.png');
+  background-image: url('../../assets/images/header-bgckground.png');
   /* 背景图片路径 */
   background-size: cover;
   /* 背景图片自适应 */
@@ -331,6 +339,7 @@ export default {
 
 .room-card {
   padding: 0;
+  width: 310px;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
@@ -338,7 +347,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: 400px; /* Ensure cards don't grow excessively */
 }
 
 .room-image-wrapper {
@@ -413,9 +421,8 @@ export default {
   color: white;
 
   &:hover {
-    background-color: #ffffff;
+    background-color: #ff6b6b;
     border-color: #ff6b6b;
-    color: #ff6b6b
   }
 }
 

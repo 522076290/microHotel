@@ -5,12 +5,13 @@
         <navbar/>
       </div>
       <app-main/>
+      <footer-copyright/>
     </div>
   </div>
 </template>
 
 <script>
-import { AppMain, Navbar, Settings } from './components'
+import { AppMain, Navbar, Settings, FooterCopyright } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 import variables from '@/assets/styles/variables.scss'
@@ -20,7 +21,8 @@ export default {
   components: {
     AppMain,
     Navbar,
-    Settings
+    Settings,
+    FooterCopyright
   },
   mixins: [ResizeMixin],
   computed: {

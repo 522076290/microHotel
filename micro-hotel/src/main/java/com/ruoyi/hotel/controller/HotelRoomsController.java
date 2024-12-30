@@ -37,7 +37,7 @@ public class HotelRoomsController extends BaseController
     /**
      * 查询酒店房间列表
      */
-    @PreAuthorize("@ss.hasPermi('hotel:rooms:list')")
+    //  @PreAuthorize("@ss.hasPermi('hotel:rooms:list')")
     @GetMapping("/list")
     public TableDataInfo list(HotelRooms hotelRooms)
     {

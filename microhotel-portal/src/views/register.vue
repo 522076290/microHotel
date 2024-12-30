@@ -1,10 +1,25 @@
 <template>
   <div class="register">
     <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <a><h3 class="title">微酒店预订管理系统</h3></a>
       <el-form-item prop="username">
-        <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="账号">
+        <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="登录账号(一经注册无法修改)">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="nickname">
+        <el-input v-model="registerForm.nickname" type="text" auto-complete="off" placeholder="真实姓名(一经注册无法修改)">
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="phonenumber">
+        <el-input v-model="registerForm.phonenumber" type="text" auto-complete="off" placeholder="手机号码">
+          <svg-icon slot="prefix" icon-class="phone" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="email">
+        <el-input v-model="registerForm.email" type="text" auto-complete="off" placeholder="电子邮箱">
+          <svg-icon slot="prefix" icon-class="email" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
@@ -83,6 +98,9 @@ export default {
       codeUrl: "",
       registerForm: {
         username: "",
+        nickname:"",
+        phonenumber:"",
+        email:"",
         password: "",
         confirmPassword: "",
         code: "",
@@ -92,6 +110,14 @@ export default {
         username: [
           { required: true, trigger: "blur", message: "请输入您的账号" },
           { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
+        ],
+        phonenumber:[
+          { required: true, trigger: "blur", message: "请输入您的手机号码" },
+          { pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/, message: "请输入正确的手机号码", trigger: "blur" }
+        ],
+        email:[
+          { required: true, trigger: "blur", message: "请输入您的电子邮箱" },
+          { pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/, message: "请输入正确的电子邮箱", trigger: "blur" }
         ],
         password: [
           { required: true, trigger: "blur", message: "请输入您的密码" },
