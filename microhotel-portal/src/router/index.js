@@ -62,16 +62,34 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/room/order/pay/:id', 
+    component: () => import('@/views/room/order/pay'),
+    name: 'order-pay',
+    meta: { title: '订单支付', activeMenu: '/room/order/pay' }
+  },
+  {
     path: '',
     component: Layout,
     redirect: 'index',
     children: [
       {
-        path: '/room-type/*',
-        component: () => import('@/views/roomtype'),
+        path: '/room-type/:id',
+        component: () => import('@/views/room/type'),
         name: 'room-type',
         meta: { title: '房间列表', icon: 'dashboard', affix: true }
-      }
+      },
+      {
+        path: '/room/detail/:id',
+        component: () => import('@/views/room/detail'),
+        name: 'room-detail',
+        meta: { title: '房间详情', activeMenu: '/room-detail' }
+      },
+      {
+        path: '/room/order/:id',
+        component: () => import('@/views/room/order'),
+        name: 'room-detail',
+        meta: { title: '订单详情', activeMenu: '/room-order' },
+      },
     ]
   },
   {

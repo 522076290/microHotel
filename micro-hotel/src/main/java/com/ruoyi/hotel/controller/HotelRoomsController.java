@@ -62,7 +62,7 @@ public class HotelRoomsController extends BaseController
     /**
      * 获取酒店房间详细信息
      */
-    @PreAuthorize("@ss.hasPermi('hotel:rooms:query')")
+//    @PreAuthorize("@ss.hasPermi('hotel:rooms:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

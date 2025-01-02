@@ -68,7 +68,7 @@
           <p class="room-description" v-html="truncatedDescription(room.description)"></p>
         </div>
         <!-- 按钮部分 -->
-        <el-button type="primary" size="small" class="room-button">查看&预定</el-button>
+        <el-button type="primary" size="small" class="room-button" @click="toRoomDetal(room.id)">查看&预定</el-button>
       </el-card>
     </div>
 
@@ -195,9 +195,13 @@ export default {
       const lastNumber = path.match(/\d+$/);
       return lastNumber ? parseInt(lastNumber[0]) : 1;
     },
+    /** 跳转到房间详情页面 */
+    toRoomDetal(roomid){
+      this.$router.push({ path: `/room/detail/${roomid}` });
+    }
   },
   created() {
-    this.queryParams.type = this.getLastNumber();
+    this.queryParams.type = String(this.getLastNumber());
     this.getList();
   },
   computed: {
@@ -227,7 +231,7 @@ export default {
 
 /* 背景图块 */
 .breadcrumb-outer {
-  background-image: url('../../assets/images/header-bgckground.png');
+  background-image: url('../../../assets/images/header-bgckground.png');
   /* 背景图片路径 */
   background-size: cover;
   /* 背景图片自适应 */

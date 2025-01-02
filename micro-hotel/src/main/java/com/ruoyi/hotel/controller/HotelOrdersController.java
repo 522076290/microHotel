@@ -77,7 +77,7 @@ public class HotelOrdersController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody HotelOrders hotelOrders)
     {
-        return toAjax(hotelOrdersService.insertHotelOrders(hotelOrders));
+        return success(hotelOrdersService.insertHotelOrders(hotelOrders));
     }
 
     /**

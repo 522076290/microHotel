@@ -68,7 +68,7 @@
           <p class="room-description" v-html="truncatedDescription(room.description)"></p>
         </div>
         <!-- 按钮部分 -->
-        <el-button type="primary" size="small" class="room-button">查看&预定</el-button>
+        <el-button type="primary" size="small" class="room-button" @click="toRoomDetal(room.id)">查看&预定</el-button>
       </el-card>
     </div>
 
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { listRooms, getRooms, delRooms, addRooms, updateRooms } from "@/api/hotel/rooms";
+import { listRooms} from "@/api/hotel/rooms";
 export default {
   dicts: ['hotel_room_type'],
   data() {
@@ -102,8 +102,6 @@ export default {
           disabledDate(time) {
             // 选择今天以及今天之后的日期
             return time.getTime() < Date.now() - 8.64e7// 如果没有后面的-8.64e7就是不可以选择
-            // 选择今天以及今天之前的日期
-            // return time.getTime() > Date.now() - 8.64e7// 如果没有后面的-8.64e7就是不可以选择今天的
           },
           shortcuts: [{
             text: '预定一天',
@@ -188,8 +186,21 @@ export default {
       // Disable dates before today
       return date < new Date(new Date().setHours(0, 0, 0, 0));
     },
+    /** 跳转到房间详情页面 */
+    toRoomDetal(roomid){
+      this.$router.push({ path: `/room/detail/${roomid}` });
+    },
+    /** 设置默认日期 */
+    defaultDateRange() {
+      const end = new Date();
+      const start = new Date();
+      end.setTime(start.getTime() + 3600 * 1000 * 24 * 1);
+      this.queryParams.dateRange =  [start, end];
+    },
   },
   created() {
+    // 设置默认日期
+    this.defaultDateRange();
     this.getList();
   },
   computed: {

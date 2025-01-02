@@ -28,7 +28,7 @@
         </div>
         <div class="links links-right pull-right" v-if="token">
           <ul class="right-menu" >
-            <li class="right-menu-item" @click="toLogin">
+            <li class="right-menu-item" @click="tobakestage">
               <a> <i class="el-icon-user"></i>进入后台</a>
             </li>
             <li class="right-menu-item" @click="logout">
@@ -47,7 +47,7 @@
           </a>
         </div>
         <div class="navbar-menu">
-          <el-menu :default-active="`-1`" class="el-menu-demo" mode="horizontal" active-text-color="#fe5459">
+          <el-menu class="el-menu-demo" mode="horizontal" active-text-color="#fe5459">
             <el-menu-item index="-1" @click="$router.push('/index')">首页</el-menu-item>
             <el-menu-item v-for="dict in dict.type.hotel_room_type" :key="dict.value" :index="dict.value"
               @click="navigateTo(dict.value)">
@@ -117,6 +117,10 @@ export default {
     },
     toLogin() {
       this.$router.push('/login')
+    },
+    tobakestage(){
+      // 打开一个新的页签 进入管理后台
+      window.open(process.env.VUE_APP_BACK_STAGE_URL);
     },
     handleSelect(index) {
       console.log('Selected menu item index:', index);

@@ -33,7 +33,7 @@ public interface IHotelOrdersService
      * @param hotelOrders 酒店订单
      * @return 结果
      */
-    public int insertHotelOrders(HotelOrders hotelOrders);
+    public HotelOrders insertHotelOrders(HotelOrders hotelOrders);
 
     /**
      * 修改酒店订单
@@ -58,4 +58,10 @@ public interface IHotelOrdersService
      * @return 结果
      */
     public int deleteHotelOrdersById(Long id);
+
+    /**
+     * 查询今日订单
+     * @return
+     */
+    public List<HotelOrders> selecToDaytHotelOrdersList();
 }

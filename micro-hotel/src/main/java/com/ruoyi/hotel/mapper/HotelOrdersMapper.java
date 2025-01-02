@@ -58,4 +58,18 @@ public interface HotelOrdersMapper
      * @return 结果
      */
     public int deleteHotelOrdersByIds(Long[] ids);
+
+    /**
+     * 查询今日订单
+     * @return
+     */
+    public List<HotelOrders> selecToDaytHotelOrdersList();
+
+
+    /**
+     * 查询重叠订单
+     * @param hotelOrders 酒店订单
+     * @return
+     */
+    public int  countOverlapOrders(HotelOrders hotelOrders);
 }

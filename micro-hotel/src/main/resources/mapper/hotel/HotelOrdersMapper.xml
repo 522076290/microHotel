@@ -45,10 +45,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="reviewDate != null "> and review_date = #{reviewDate}</if>
         </where>
     </select>
+
+    <select id="selecToDaytHotelOrdersList"  resultMap="HotelOrdersResult">
+        <include refid="selectHotelOrdersVo"/>
+        <where>
+            <!-- 查询当日订单 -->
+            AND TO_DAYS(order_date) = TO_DAYS(NOW())
+        </where>
+    </select>
     
     <select id="selectHotelOrdersById" parameterType="Long" resultMap="HotelOrdersResult">
         <include refid="selectHotelOrdersVo"/>
         where id = #{id}
+    </select>
+
+    <select id="countOverlapOrders" parameterType="HotelOrders" resultType="int">
+        SELECT COUNT(*)
+        FROM hotel_orders
+        WHERE room_id = #{roomId}
+          AND status NOT IN (2, 3)
+          AND (#{startDate} &lt; end_date AND #{endDate} &gt; start_date)
     </select>
 
     <insert id="insertHotelOrders" parameterType="HotelOrders" useGeneratedKeys="true" keyProperty="id">
