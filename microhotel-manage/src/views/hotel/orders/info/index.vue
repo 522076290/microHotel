@@ -1,18 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- 背景图块 -->
-    <section class="breadcrumb-outer">
-      <div class="container">
-        <div class="breadcrumb-content">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item v-for="item in breadcrumbs" :key="item.path" :to="{ path: item.path }"
-              :class="{ active: item.path === $route.path }">
-              {{ item.meta.title }}
-            </el-breadcrumb-item>
-          </el-breadcrumb>
-        </div>
-      </div>
-    </section>
 
     <div class="room-order-detail">
       <el-row :gutter="40">
@@ -57,9 +44,6 @@
                 <span>{{ orderDetail.orderDate }}</span>
               </el-form-item>
             </el-form>
-            <el-row>
-              <el-button type="primary" @click="goOrderManage">前往订单管理</el-button>
-            </el-row>
           </el-card>
         </el-col>
         <!-- Right: Booking Info -->
@@ -89,6 +73,7 @@
 <script>
 import { getOrders } from "@/api/hotel/orders";
 export default {
+  name: "Info",
   dicts: ['hotel_status','accept_status'],
   data() {
     return {
@@ -110,29 +95,16 @@ export default {
         });
       });
     },
-    goToRoomDetail(id) {
-      this.$router.push({ path: `/room/detail/${id}` });
-    },
     goOrderManage(){
       //当前页面跳转网址不要新开页面
       window.location.href = process.env.VUE_APP_BACK_STAGE_URL + `/hotel/orders`;
-    }
+    },
+    goToRoomDetail(id) {
+      window.open(process.env.VUE_APP_PORTAL_URL + `/room/detail/${id}`)
+    },
   },
   created() {
     this.getOrders();
-  },
-  computed: {
-    breadcrumbs() {
-      // 生成面包屑导航
-      const breadcrumbs = [];
-      const matched = this.$route.matched;
-      matched.forEach((item) => {
-        if (item.meta.title) {
-          breadcrumbs.push({ path: item.path, meta: item.meta });
-        }
-      });
-      return breadcrumbs;
-    }
   },
 };
 </script>
@@ -144,55 +116,6 @@ export default {
   padding: 0;
   padding-bottom: 80px;
   box-sizing: border-box;
-}
-
-/* 背景图块 */
-.breadcrumb-outer {
-  background-image: url('../../../assets/images/header-bgckground.png');
-  /* 背景图片路径 */
-  background-size: cover;
-  /* 背景图片自适应 */
-  background-position: center;
-  /* 背景图片居中 */
-  padding: 160px 0;
-  text-align: center;
-  position: relative;
-  background-position: 50%;
-
-
-  .breadcrumb-content {
-    h2 {
-      font-size: 32px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-      color: #fff;
-      /* 文字阴影效果 */
-    }
-
-    .el-breadcrumb {
-      display: inline-block;
-      /* 添加内联块样式，确保居中 */
-      margin: 0 auto;
-      /* 自动居中 */
-      text-align: center;
-      /* 确保文字居中 */
-      font-size: 16px;
-      /* 字体大小 */
-      color: #fff !important;
-      /* 文字颜色 */
-
-      .el-breadcrumb-item {
-        color: #fff !important;
-
-        /* 面包屑普通状态颜色 */
-        &:last-child {
-          color: #fe5459 !important;
-          /* 当前页颜色 */
-        }
-      }
-    }
-  }
 }
 
 /* 被选中时的颜色 */

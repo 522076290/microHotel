@@ -135,6 +135,20 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/hotel/orders/info',
+    component: Layout,
+    hidden: true,
+    permissions: ['hotel:orders:list'],
+    children: [
+      {
+        path: ':Id(\\d+)',
+        component: () => import('@/views/hotel/orders/info'),
+        name: 'Data',
+        meta: { title: '订单详情', activeMenu: '/hotel/orders/info' }
+      }
+    ]
+  },
+  {
     path: '/monitor/job-log',
     component: Layout,
     hidden: true,

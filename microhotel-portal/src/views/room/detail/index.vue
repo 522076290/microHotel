@@ -168,7 +168,7 @@ export default {
         this.bookingInfo.startDate = this.bookingInfo.startDate.getTime();
         this.bookingInfo.endDate = this.bookingInfo.endDate.getTime();
         addOrders(this.bookingInfo).then(response => {
-          this.$modal.msgSuccess("创建订单成功");
+          this.$modal.msgSuccess("创建订单成功，请完成支付");
           this.open = false;
           // 页面跳转到支付页面 并携带订单id
           this.$router.push({

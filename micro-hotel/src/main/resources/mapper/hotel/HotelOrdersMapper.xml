@@ -36,13 +36,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDate != null "> and end_date = #{endDate}</if>
             <if test="numOfRooms != null "> and num_of_rooms = #{numOfRooms}</if>
             <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
-            <if test="orderDate != null "> and order_date = #{orderDate}</if>
+            <if test="orderDate != null "> and DATE(order_date) = DATE(#{orderDate})</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="merchantAcceptDate != null "> and merchant_accept_date = #{merchantAcceptDate}</if>
+            <if test="merchantAcceptDate != null "> and DATE(merchant_accept_date) = DATE(#{merchantAcceptDate})</if>
             <if test="merchantAcceptStatus != null "> and merchant_accept_status = #{merchantAcceptStatus}</if>
             <if test="customerRating != null "> and customer_rating = #{customerRating}</if>
             <if test="customerReview != null  and customerReview != ''"> and customer_review = #{customerReview}</if>
-            <if test="reviewDate != null "> and review_date = #{reviewDate}</if>
+            <if test="reviewDate != null "> and DATE(review_date) = DATE(#{reviewDate})</if>
         </where>
     </select>
 

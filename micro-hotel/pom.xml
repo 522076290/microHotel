@@ -30,13 +30,24 @@
             <artifactId>ruoyi-common</artifactId>
         </dependency>
 
-
-
         <!--   引入Hutool工具     -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>5.8.26</version>
+        </dependency>
+
+        <!--   引入lombok    -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--   使用system模块的     -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-system</artifactId>
         </dependency>
 
 

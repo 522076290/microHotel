@@ -20,7 +20,8 @@
 
 <script>
 
-import { getOrders } from "@/api/hotel/orders";
+import { getOrders,updateOrders } from "@/api/hotel/orders";
+import { addInvoices } from "@/api/hotel/invoices";
 
 export default {
   data() {
@@ -36,8 +37,36 @@ export default {
       this.$router.push("/"); // Navigate to the homepage or previous page
     },
     markAsPaid() {
-      this.$message.success("支付完成！"); // Show a success message
-      this.$router.push("/order-summary"); // Navigate to the order summary page
+      // 先检查订单的状态 看看是否支付还是取消
+      getOrders(this.getLastNumber()).then( response=>{
+        this.orderDetail = response.data;
+        if (this.orderDetail.status === 1) {
+          this.$modal.msgError("订单已经支付！");
+          this.$router.push("/room/order/"+this.getLastNumber()); // 跳转到订单详情页面
+          return;
+      }
+      if (this.orderDetail.status === 2) {
+          this.$modal.msgError("订单超时支付，已取消！");
+          this.$router.push("/room/order/"+this.getLastNumber()); // 跳转到订单详情页面
+          return;
+      }
+      this.$modal.confirm("是否确认已完成支付？").then(() => {
+        updateOrders({
+          id: this.getLastNumber(),
+          status:1
+        }).then(() => {
+          this.$modal.msgSuccess("支付成功，等待商家接单");
+          addInvoices({
+            orderId: this.getLastNumber(),
+            customerId: this.orderDetail.sysUser.userId,
+            totalRoomCharge: this.orderDetail.totalPrice,
+            paymentStatus: 1,
+            paymentDate: new Date().getTime(),
+          });
+          this.$router.push("/room/order/"+this.getLastNumber()); // 跳转到订单详情页面
+        });
+      });
+      })
     },
     /** 获取当前路由最后的数字 */
     getLastNumber() {

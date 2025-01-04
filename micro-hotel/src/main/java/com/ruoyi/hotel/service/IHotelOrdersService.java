@@ -2,6 +2,7 @@ package com.ruoyi.hotel.service;
 
 import java.util.List;
 import com.ruoyi.hotel.domain.HotelOrders;
+import com.ruoyi.hotel.domain.resp.HotelOrdersResp;
 
 /**
  * 酒店订单Service接口
@@ -17,7 +18,7 @@ public interface IHotelOrdersService
      * @param id 酒店订单主键
      * @return 酒店订单
      */
-    public HotelOrders selectHotelOrdersById(Long id);
+    public HotelOrdersResp selectHotelOrdersById(Long id);
 
     /**
      * 查询酒店订单列表

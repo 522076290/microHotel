@@ -2,12 +2,13 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="客户评分" prop="customerRating">
-        <el-input
-          v-model="queryParams.customerRating"
-          placeholder="请选择客户评分"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.customerRating" placeholder="请选择评分">
+          <el-option label="极差" value=1></el-option>
+          <el-option label="失望" value=2></el-option>
+          <el-option label="一般" value=3></el-option>
+          <el-option label="满意" value=4></el-option>
+          <el-option label="惊喜" value=5></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="评价日期" prop="reviewDate">
         <el-date-picker clearable
@@ -40,7 +41,11 @@
     <el-table v-loading="loading" :data="ordersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单号码" align="center" prop="orderNumber" />
-      <el-table-column label="客户评分" align="center" prop="customerRating" />
+      <el-table-column label="客户评分" align="center" prop="customerRating" >
+        <template slot-scope="scope">
+          <el-rate disabled show-text v-model="scope.row.customerRating"></el-rate>
+        </template>
+      </el-table-column>
       <el-table-column label="客户评价内容" align="center" prop="customerReview" />
       <el-table-column label="评价日期" align="center" prop="reviewDate" width="180">
         <template slot-scope="scope">
@@ -70,76 +75,9 @@
 
     <!-- 添加或修改酒店订单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="订单号码，用于客户查询和酒店管理" prop="orderNumber">
-          <el-input v-model="form.orderNumber" placeholder="请输入订单号码，用于客户查询和酒店管理" />
-        </el-form-item>
-        <el-form-item label="客户ID，关联客户信息表" prop="customerId">
-          <el-input v-model="form.customerId" placeholder="请输入客户ID，关联客户信息表" />
-        </el-form-item>
-        <el-form-item label="房间ID，关联房间信息表" prop="roomId">
-          <el-input v-model="form.roomId" placeholder="请输入房间ID，关联房间信息表" />
-        </el-form-item>
-        <el-form-item label="入住日期" prop="startDate">
-          <el-date-picker clearable
-            v-model="form.startDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择入住日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="离店日期" prop="endDate">
-          <el-date-picker clearable
-            v-model="form.endDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择离店日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="预订的房间数量" prop="numOfRooms">
-          <el-input v-model="form.numOfRooms" placeholder="请输入预订的房间数量" />
-        </el-form-item>
-        <el-form-item label="订单总价" prop="totalPrice">
-          <el-input v-model="form.totalPrice" placeholder="请输入订单总价" />
-        </el-form-item>
-        <el-form-item label="预订日期" prop="orderDate">
-          <el-date-picker clearable
-            v-model="form.orderDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择预订日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="订单状态的整型表示，对应字典表中的状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择订单状态的整型表示，对应字典表中的状态">
-            <el-option
-              v-for="dict in dict.type.hotel_status"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="商家接单日期" prop="merchantAcceptDate">
-          <el-date-picker clearable
-            v-model="form.merchantAcceptDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择商家接单日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="商家接单状态的整型表示，对应字典表中的状态" prop="merchantAcceptStatus">
-          <el-select v-model="form.merchantAcceptStatus" placeholder="请选择商家接单状态的整型表示，对应字典表中的状态">
-            <el-option
-              v-for="dict in dict.type.accept_status"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="客户评分，1到5星" prop="customerRating">
-          <el-input v-model="form.customerRating" placeholder="请输入客户评分，1到5星" />
+      <el-form ref="form" :model="form" :rules="rules" disabled="false" label-width="80px">
+        <el-form-item label="客户评分" prop="customerRating">
+          <el-rate show-text v-model="form.customerRating"></el-rate>
         </el-form-item>
         <el-form-item label="客户评价内容" prop="customerReview">
           <el-input v-model="form.customerReview" type="textarea" placeholder="请输入内容" />
@@ -206,8 +144,6 @@ export default {
         customerReview: null,
         reviewDate: null
       },
-      // 表单参数
-      form: {},
       // 表单校验
       rules: {
         orderNumber: [
@@ -237,7 +173,9 @@ export default {
         merchantAcceptStatus: [
           { required: true, message: "商家接单状态的整型表示，对应字典表中的状态不能为空", trigger: "change" }
         ],
-      }
+      },
+      // 表单参数
+      form: {},
     };
   },
   created() {
@@ -248,7 +186,8 @@ export default {
     getList() {
       this.loading = true;
       listOrders(this.queryParams).then(response => {
-        this.ordersList = response.rows;
+        // 过滤rows里面customerRating是空的
+        this.ordersList = response.rows.filter(item => item.customerRating !== null);
         this.total = response.total;
         this.loading = false;
       });

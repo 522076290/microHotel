@@ -2,6 +2,7 @@ package com.ruoyi.hotel.service;
 
 import java.util.List;
 import com.ruoyi.hotel.domain.HotelInvoices;
+import com.ruoyi.hotel.domain.resp.HotelInvoicesResp;
 
 /**
  * 酒店账单Service接口
@@ -25,7 +26,7 @@ public interface IHotelInvoicesService
      * @param hotelInvoices 酒店账单
      * @return 酒店账单集合
      */
-    public List<HotelInvoices> selectHotelInvoicesList(HotelInvoices hotelInvoices);
+    public List<HotelInvoicesResp> selectHotelInvoicesList(HotelInvoices hotelInvoices);
 
     /**
      * 新增酒店账单

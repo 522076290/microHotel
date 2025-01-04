@@ -84,7 +84,13 @@
     <el-table v-loading="loading" :data="ordersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="订单唯一标识ID" align="center" prop="id" /> -->
-      <el-table-column label="订单号码" align="center" prop="orderNumber" />
+      <el-table-column label="订单号码" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/hotel/orders/info/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.orderNumber }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="用户信息" align="center" prop="customerId" />
       <el-table-column label="入住日期" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
@@ -122,10 +128,21 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['hotel:orders:edit']"
+          >查看</el-button>
+          <el-button v-if="scope.row.status == 1 && scope.row.merchantAcceptStatus ==0"
+            size="mini"
+            type="text"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['hotel:orders:edit']"
-          >修改</el-button>
+          >接单</el-button>
+          <el-button v-if="scope.row.status == 1 && scope.row.merchantAcceptStatus ==1 && scope.row.customerId == user.userId && scope.row.customerRating == null"
+            size="mini"
+            type="text"
+            @click="handleComment(scope.row)"
+            v-hasPermi="['hotel:orders:edit']"
+          >评价</el-button>
           <el-button
             size="mini"
             type="text"
@@ -145,11 +162,28 @@
       @pagination="getList"
     />
 
+    <!-- 添加或修改酒店订单对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="客户评分" prop="customerRating">
+          <el-rate show-text v-model="form.customerRating"></el-rate>
+        </el-form-item>
+        <el-form-item label="内容" prop="customerReview">
+          <el-input v-model="form.customerReview" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { listOrders, getOrders, delOrders, addOrders, updateOrders } from "@/api/hotel/orders";
+import { getUserProfile } from "@/api/system/user";
 
 export default {
   name: "Orders",
@@ -197,38 +231,23 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        orderNumber: [
-          { required: true, message: "订单号码，用于客户查询和酒店管理不能为空", trigger: "blur" }
-        ],
-        customerId: [
-          { required: true, message: "客户ID，关联客户信息表不能为空", trigger: "blur" }
-        ],
         roomId: [
           { required: true, message: "房间ID，关联房间信息表不能为空", trigger: "blur" }
         ],
-        startDate: [
-          { required: true, message: "入住日期不能为空", trigger: "blur" }
+        customerReview:[
+          { required: true, message: "内容不能为空", trigger: "blur" }
         ],
-        endDate: [
-          { required: true, message: "离店日期不能为空", trigger: "blur" }
-        ],
-        numOfRooms: [
-          { required: true, message: "预订的房间数量不能为空", trigger: "blur" }
-        ],
-        totalPrice: [
-          { required: true, message: "订单总价不能为空", trigger: "blur" }
-        ],
-        status: [
-          { required: true, message: "订单状态的整型表示，对应字典表中的状态不能为空", trigger: "change" }
-        ],
-        merchantAcceptStatus: [
-          { required: true, message: "商家接单状态的整型表示，对应字典表中的状态不能为空", trigger: "change" }
-        ],
-      }
+        customerRating:[
+          { required: true, message: "客户评分不能为空", trigger: "blur" }
+        ]
+      },
+      // 用户信息
+      user: {},
     };
   },
   created() {
     this.getList();
+    this.getUserInfo();
   },
   methods: {
     /** 查询酒店订单列表 */
@@ -288,14 +307,36 @@ export default {
       this.open = true;
       this.title = "添加酒店订单";
     },
+    /** 查看按钮操作 */
+    handleCheck(row) {
+      this.reset();
+      const id = row.id || this.ids
+      //打开新的查看页面
+      this.$router.push({ path: '/hotel/orders/info/' + id });
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.reset();
+      const orderNumber = row.orderNumber
+      this.$modal.confirm('是否确认酒店订单编号为"' + orderNumber + '"的订单？').then(function() {
+      }).then(() => {
+        row.merchantAcceptStatus = 1;
+        row.merchantAcceptDate = new Date().getTime();
+        updateOrders(row).then(response => {
+          this.$modal.msgSuccess("已成功接单");
+          this.getList();
+        });
+      }).catch(() => {});
+    },
+    /** 评论按钮操作 */
+    handleComment(row){
       this.reset();
       const id = row.id || this.ids
       getOrders(id).then(response => {
         this.form = response.data;
+        this.form.reviewDate = new Date().getTime();
         this.open = true;
-        this.title = "修改酒店订单";
+        this.title = "订单评价";
       });
     },
     /** 提交按钮 */
@@ -333,7 +374,14 @@ export default {
       this.download('hotel/orders/export', {
         ...this.queryParams
       }, `orders_${new Date().getTime()}.xlsx`)
-    }
+    },
+    /** 获取用户信息 */
+    getUserInfo(){
+      getUserProfile().then(response => {
+        this.user = response.data;
+        console.log(response.data)
+      });
+    },
   }
 };
 </script>

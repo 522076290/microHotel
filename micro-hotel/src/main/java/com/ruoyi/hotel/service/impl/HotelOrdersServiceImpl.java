@@ -8,13 +8,15 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import com.ruoyi.hotel.domain.resp.HotelOrdersResp;
 import com.ruoyi.hotel.mapper.HotelRoomsMapper;
-import org.apache.poi.hpsf.Decimal;
+import com.ruoyi.system.mapper.SysUserMapper;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RQueue;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+
 import org.springframework.stereotype.Service;
 import com.ruoyi.hotel.mapper.HotelOrdersMapper;
 import com.ruoyi.hotel.domain.HotelOrders;
@@ -36,6 +38,9 @@ public class HotelOrdersServiceImpl implements IHotelOrdersService
     private HotelRoomsMapper hotelRoomsMapper;
 
     @Autowired
+    private SysUserMapper sysUserMapper;
+
+    @Autowired
     private RedissonClient redissonClient; // 注入 RedissonClient
 
 
@@ -53,9 +58,18 @@ public class HotelOrdersServiceImpl implements IHotelOrdersService
      * @return 酒店订单
      */
     @Override
-    public HotelOrders selectHotelOrdersById(Long id)
+    public HotelOrdersResp selectHotelOrdersById(Long id)
     {
-        return hotelOrdersMapper.selectHotelOrdersById(id);
+        HotelOrders hotelOrder = hotelOrdersMapper.selectHotelOrdersById(id);
+        HotelOrdersResp hotelOrdersResp = new HotelOrdersResp();
+        // 通过反射将hotelOrder值赋值hotelOrdersResp
+        BeanUtils.copyProperties(hotelOrder, hotelOrdersResp);
+        // 查询用户的信息添加进hotelOrdersResp
+        hotelOrdersResp.setSysUser(sysUserMapper.selectUserById(hotelOrder.getCustomerId()));
+        // 获取房间信息添加进hotelOrdersResp
+        hotelOrdersResp.setHotelRooms(hotelRoomsMapper.selectHotelRoomsById(hotelOrder.getRoomId()));
+
+        return hotelOrdersResp;
     }
 
     /**

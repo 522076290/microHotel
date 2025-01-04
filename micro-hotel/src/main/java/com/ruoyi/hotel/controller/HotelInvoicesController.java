@@ -2,6 +2,8 @@ package com.ruoyi.hotel.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.hotel.domain.resp.HotelInvoicesResp;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,22 +44,10 @@ public class HotelInvoicesController extends BaseController
     public TableDataInfo list(HotelInvoices hotelInvoices)
     {
         startPage();
-        List<HotelInvoices> list = hotelInvoicesService.selectHotelInvoicesList(hotelInvoices);
+        List<HotelInvoicesResp> list = hotelInvoicesService.selectHotelInvoicesList(hotelInvoices);
         return getDataTable(list);
     }
 
-    /**
-     * 导出酒店账单列表
-     */
-    @PreAuthorize("@ss.hasPermi('hotel:invoices:export')")
-    @Log(title = "酒店账单", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, HotelInvoices hotelInvoices)
-    {
-        List<HotelInvoices> list = hotelInvoicesService.selectHotelInvoicesList(hotelInvoices);
-        ExcelUtil<HotelInvoices> util = new ExcelUtil<HotelInvoices>(HotelInvoices.class);
-        util.exportExcel(response, list, "酒店账单数据");
-    }
 
     /**
      * 获取酒店账单详细信息

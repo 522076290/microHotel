@@ -6,7 +6,7 @@
         <div class="links links-left">
           <ul class="left-menu">
             <li class="left-menu-item">
-              <a><i class="el-icon-message"></i> admin@liuyanzhao.com</a>
+              <a><i class="el-icon-message"></i> admin@bloglan.cn</a>
             </li>
             <li class="left-menu-item">
               <a><i class="el-icon-phone"></i> 21-2327-2888</a>
@@ -217,10 +217,10 @@ export default {
         }
       }
 
-      .left-menu-item:hover,
-      .right-menu-item:hover {
+      .left-menu-item a:hover,
+      .right-menu-item a:hover {
+        /* 鼠标悬停时字体变色 */
         color: #fe5459;
-        /* 鼠标悬停时字体变蓝色 */
       }
     }
   }
