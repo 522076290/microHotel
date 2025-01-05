@@ -278,7 +278,13 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public boolean registerUser(SysUser user)
     {
-        return userMapper.insertUser(user) > 0;
+        int flag = userMapper.insertUser(user);
+        Long[] roleIds = new Long[]{3L};
+        // 设置注册的用户默认为客户
+        user.setRoleIds(roleIds);
+        // 新增用户与角色管理
+        insertUserRole(user);
+        return flag > 0;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.system.service.ISysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
@@ -81,6 +82,7 @@ public class SysRegisterService
             sysUser.setEmail(registerBody.getEmail());
             sysUser.setPhonenumber(registerBody.getPhonenumber());
             boolean regFlag = userService.registerUser(sysUser);
+
             if (!regFlag)
             {
                 msg = "注册失败,请联系系统管理人员";

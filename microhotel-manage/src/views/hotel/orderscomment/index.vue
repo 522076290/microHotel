@@ -101,6 +101,7 @@
 
 <script>
 import { listOrders, getOrders, delOrders, addOrders, updateOrders } from "@/api/hotel/orders";
+import store from "@/store";
 
 export default {
   name: "Orders",
@@ -184,6 +185,12 @@ export default {
   methods: {
     /** 查询酒店订单列表 */
     getList() {
+      // 普通客户只查询自己的记录
+      const roles = store.getters.roles;
+      const userid = store.getters.userid
+      if (roles.includes("coustomer")) {
+        this.queryParams.customerId = userid;
+      }
       this.loading = true;
       listOrders(this.queryParams).then(response => {
         // 过滤rows里面customerRating是空的

@@ -2,6 +2,8 @@ package com.ruoyi.hotel.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.hotel.domain.resp.HotelOrdersResp;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,22 +44,22 @@ public class HotelOrdersController extends BaseController
     public TableDataInfo list(HotelOrders hotelOrders)
     {
         startPage();
-        List<HotelOrders> list = hotelOrdersService.selectHotelOrdersList(hotelOrders);
+        List<HotelOrdersResp> list = hotelOrdersService.selectHotelOrdersList(hotelOrders);
         return getDataTable(list);
     }
 
     /**
      * 导出酒店订单列表
      */
-    @PreAuthorize("@ss.hasPermi('hotel:orders:export')")
-    @Log(title = "酒店订单", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, HotelOrders hotelOrders)
-    {
-        List<HotelOrders> list = hotelOrdersService.selectHotelOrdersList(hotelOrders);
-        ExcelUtil<HotelOrders> util = new ExcelUtil<HotelOrders>(HotelOrders.class);
-        util.exportExcel(response, list, "酒店订单数据");
-    }
+//    @PreAuthorize("@ss.hasPermi('hotel:orders:export')")
+//    @Log(title = "酒店订单", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, HotelOrders hotelOrders)
+//    {
+//        List<HotelOrders> list = hotelOrdersService.selectHotelOrdersList(hotelOrders);
+//        ExcelUtil<HotelOrders> util = new ExcelUtil<HotelOrders>(HotelOrders.class);
+//        util.exportExcel(response, list, "酒店订单数据");
+//    }
 
     /**
      * 获取酒店订单详细信息

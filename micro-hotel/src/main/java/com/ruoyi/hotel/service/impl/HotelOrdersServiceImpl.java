@@ -2,6 +2,7 @@ package com.ruoyi.hotel.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -79,9 +80,22 @@ public class HotelOrdersServiceImpl implements IHotelOrdersService
      * @return 酒店订单
      */
     @Override
-    public List<HotelOrders> selectHotelOrdersList(HotelOrders hotelOrders)
+    public List<HotelOrdersResp> selectHotelOrdersList(HotelOrders hotelOrders)
     {
-        return hotelOrdersMapper.selectHotelOrdersList(hotelOrders);
+        List<HotelOrders> hotelOrderList = hotelOrdersMapper.selectHotelOrdersList(hotelOrders);
+        List<HotelOrdersResp> hotelOrdersRespList = new ArrayList<>();
+        for (HotelOrders hotelOrder : hotelOrderList) {
+            HotelOrdersResp hotelOrdersResp = new HotelOrdersResp();
+            // 通过反射将hotelOrder值赋值hotelOrdersResp
+            BeanUtils.copyProperties(hotelOrder, hotelOrdersResp);
+            // 查询用户的信息添加进hotelOrdersResp
+            hotelOrdersResp.setSysUser(sysUserMapper.selectUserById(hotelOrder.getCustomerId()));
+            // 获取房间信息添加进hotelOrdersResp
+            hotelOrdersResp.setHotelRooms(hotelRoomsMapper.selectHotelRoomsById(hotelOrder.getRoomId()));
+            hotelOrdersRespList.add(hotelOrdersResp);
+        }
+
+        return hotelOrdersRespList;
     }
 
     /**

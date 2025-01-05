@@ -96,6 +96,7 @@
 
 <script>
 import { listInvoices, getInvoices, delInvoices, addInvoices, updateInvoices } from "@/api/hotel/invoices";
+import store from "@/store";
 
 export default {
   name: "Invoices",
@@ -172,6 +173,12 @@ export default {
   methods: {
     /** 查询酒店账单列表 */
     getList() {
+      // 普通客户只查询自己的记录
+      const roles = store.getters.roles;
+      const userid = store.getters.userid
+      if (roles.includes("coustomer")) {
+        this.queryParams.customerId = userid;
+      }
       this.loading = true;
       listInvoices(this.queryParams).then(response => {
         this.invoicesList = response.rows;

@@ -26,7 +26,7 @@ public interface IHotelOrdersService
      * @param hotelOrders 酒店订单
      * @return 酒店订单集合
      */
-    public List<HotelOrders> selectHotelOrdersList(HotelOrders hotelOrders);
+    public List<HotelOrdersResp> selectHotelOrdersList(HotelOrders hotelOrders);
 
     /**
      * 新增酒店订单

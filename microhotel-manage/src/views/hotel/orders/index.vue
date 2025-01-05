@@ -91,7 +91,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="用户信息" align="center" prop="customerId" />
+      <el-table-column label="用户信息" align="center" prop="sysUser.nickName" />
       <el-table-column label="入住日期" align="center" prop="startDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
@@ -184,6 +184,8 @@
 <script>
 import { listOrders, getOrders, delOrders, addOrders, updateOrders } from "@/api/hotel/orders";
 import { getUserProfile } from "@/api/system/user";
+import store from "@/store";
+
 
 export default {
   name: "Orders",
@@ -252,6 +254,12 @@ export default {
   methods: {
     /** 查询酒店订单列表 */
     getList() {
+      // 普通客户只查询自己的记录
+      const roles = store.getters.roles;
+      const userid = store.getters.userid
+      if (roles.includes("coustomer")) {
+        this.queryParams.customerId = userid;
+      }
       this.loading = true;
       listOrders(this.queryParams).then(response => {
         this.ordersList = response.rows;
