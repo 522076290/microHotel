@@ -165,8 +165,8 @@ export default {
     async handleBooking() {
       await getUserProfile().then(response => {
         this.bookingInfo.customerId = response.data.userId;
-        this.bookingInfo.startDate = this.bookingInfo.startDate.getTime();
-        this.bookingInfo.endDate = this.bookingInfo.endDate.getTime();
+        this.bookingInfo.startDate = this.bookingInfo.startDate;
+        this.bookingInfo.endDate = this.bookingInfo.endDate;
         addOrders(this.bookingInfo).then(response => {
           this.$modal.msgSuccess("创建订单成功，请完成支付");
           this.open = false;

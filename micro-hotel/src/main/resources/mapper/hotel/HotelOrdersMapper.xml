@@ -46,7 +46,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selecToDaytHotelOrdersList"  resultMap="HotelOrdersResult">
+    <!-- 新增的 selecWeekHotelOrdersList 方法 -->
+    <select id="selectWeekHotelOrdersList" parameterType="map" resultMap="HotelOrdersResult">
+        <include refid="selectHotelOrdersVo"/>
+        <where>
+            <!-- 过去一周的订单 -->
+            AND order_date &gt;= #{startDate}
+            AND order_date &lt;= #{endDate}
+            <!-- 可选的其他条件 -->
+            <if test="hotelOrders.orderNumber != null and hotelOrders.orderNumber != ''">
+                AND order_number = #{hotelOrders.orderNumber}
+            </if>
+            <if test="hotelOrders.customerId != null">
+                AND customer_id = #{hotelOrders.customerId}
+            </if>
+            <if test="hotelOrders.roomId != null">
+                AND room_id = #{hotelOrders.roomId}
+            </if>
+            <if test="hotelOrders.numOfRooms != null">
+                AND num_of_rooms = #{hotelOrders.numOfRooms}
+            </if>
+            <if test="hotelOrders.totalPrice != null">
+                AND total_price = #{hotelOrders.totalPrice}
+            </if>
+            <if test="hotelOrders.status != null">
+                AND status = #{hotelOrders.status}
+            </if>
+            <if test="hotelOrders.merchantAcceptStatus != null">
+                AND merchant_accept_status = #{hotelOrders.merchantAcceptStatus}
+            </if>
+            <if test="hotelOrders.customerRating != null">
+                AND customer_rating = #{hotelOrders.customerRating}
+            </if>
+            <if test="hotelOrders.customerReview != null and hotelOrders.customerReview != ''">
+                AND customer_review = #{hotelOrders.customerReview}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectToDayHotelOrdersList"  resultMap="HotelOrdersResult">
         <include refid="selectHotelOrdersVo"/>
         <where>
             <!-- 查询当日订单 -->

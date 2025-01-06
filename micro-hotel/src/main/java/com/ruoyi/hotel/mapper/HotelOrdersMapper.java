@@ -1,6 +1,8 @@
 package com.ruoyi.hotel.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.hotel.domain.HotelOrders;
 
 /**
@@ -63,7 +65,7 @@ public interface HotelOrdersMapper
      * 查询今日订单
      * @return
      */
-    public List<HotelOrders> selecToDaytHotelOrdersList();
+    public List<HotelOrders> selectToDayHotelOrdersList();
 
 
     /**
@@ -72,4 +74,9 @@ public interface HotelOrdersMapper
      * @return
      */
     public int  countOverlapOrders(HotelOrders hotelOrders);
+
+    /**
+     * 查询每周订单
+     */
+    public List<HotelOrders> selectWeekHotelOrdersList(Map<String, Object> params);
 }

@@ -137,6 +137,12 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['hotel:orders:edit']"
           >接单</el-button>
+          <el-button v-if="scope.row.status == 0 && scope.row.customerId == user.userId && userRole != `coustomer`"
+            size="mini"
+            type="text"
+            @click="handlePayment(scope.row)"
+            v-hasPermi="['hotel:orders:edit']"
+          >付款</el-button>
           <el-button v-if="scope.row.status == 1 && scope.row.merchantAcceptStatus ==1 && scope.row.customerId == user.userId && scope.row.customerRating == null"
             size="mini"
             type="text"
@@ -245,6 +251,8 @@ export default {
       },
       // 用户信息
       user: {},
+      // 用户权限
+      userRole:store.getters.roles[0],
     };
   },
   created() {
@@ -346,6 +354,13 @@ export default {
         this.open = true;
         this.title = "订单评价";
       });
+    },
+    /** 付款操作按钮 */
+    handlePayment(row){
+      this.reset();
+      const id = row.id || this.ids
+      //打开新的查看页面
+      window.open(process.env.VUE_APP_PORTAL_URL + '/room/order/pay/' + id)
     },
     /** 提交按钮 */
     submitForm() {

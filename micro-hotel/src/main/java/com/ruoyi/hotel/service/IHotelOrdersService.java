@@ -65,4 +65,9 @@ public interface IHotelOrdersService
      * @return
      */
     public List<HotelOrders> selecToDaytHotelOrdersList();
+
+    /**
+     * 查询当周订单
+     */
+    public List<HotelOrders> selecWeekHotelOrdersList(int weekOffset, HotelOrders hotelOrders);
 }

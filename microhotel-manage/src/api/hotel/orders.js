@@ -42,3 +42,13 @@ export function delOrders(id) {
     method: 'delete'
   })
 }
+
+// 查询本周的订单
+export function getWeekOrders(weekOffset,data) {
+  return request({
+    url: '/hotel/orders/week',
+    method: 'get',
+    data:data,
+    params: weekOffset
+  })
+}

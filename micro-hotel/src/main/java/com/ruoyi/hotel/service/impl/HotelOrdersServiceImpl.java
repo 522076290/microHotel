@@ -2,9 +2,10 @@ package com.ruoyi.hotel.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.date.DateUnit;
@@ -176,7 +177,32 @@ public class HotelOrdersServiceImpl implements IHotelOrdersService
 
     @Override
     public List<HotelOrders> selecToDaytHotelOrdersList() {
-        return hotelOrdersMapper.selecToDaytHotelOrdersList();
+        return hotelOrdersMapper.selectToDayHotelOrdersList();
+    }
+
+    @Override
+    public List<HotelOrders> selecWeekHotelOrdersList(int weekOffset, HotelOrders hotelOrders) {
+        // 计算目标周的开始日期和结束日期
+        LocalDate today = LocalDate.now();
+        // 确定本周的周一
+        LocalDate thisMonday = today.with(DayOfWeek.MONDAY);
+        // 计算目标周的周一
+        LocalDate targetMonday = thisMonday.plusWeeks(weekOffset);
+        // 目标周的周日
+        LocalDate targetSunday = targetMonday.plusDays(6);
+
+        // 格式化日期为字符串，假设数据库使用 'yyyy-MM-dd' 格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String startDate = targetMonday.format(formatter) + " 00:00:00";
+        String endDate = targetSunday.format(formatter) + " 23:59:59";
+
+        // 创建参数映射
+        Map<String, Object> params = new HashMap<>();
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+        params.put("hotelOrders", hotelOrders); // 传递其他查询条件
+
+        return hotelOrdersMapper.selectWeekHotelOrdersList(params);
     }
 
     public String generateOrderNumber() {
@@ -201,7 +227,7 @@ public class HotelOrdersServiceImpl implements IHotelOrdersService
 
     private  int getOrderCount() {
         // TODO: 查询数据库中当天已生成的订单数量，并返回
-        List<HotelOrders> list =hotelOrdersMapper.selecToDaytHotelOrdersList();
+        List<HotelOrders> list =hotelOrdersMapper.selectToDayHotelOrdersList();
         return list.size();
     }
 

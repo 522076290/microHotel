@@ -6,14 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.hotel.domain.resp.HotelOrdersResp;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -102,5 +95,17 @@ public class HotelOrdersController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(hotelOrdersService.deleteHotelOrdersByIds(ids));
+    }
+
+    /**
+     * 获取一周的酒店订单列表
+     */
+    @GetMapping("/week")
+    @PreAuthorize("@ss.hasPermi('hotel:orders:list')")
+    @Log(title = "酒店订单", businessType = BusinessType.OTHER)
+    public AjaxResult getWeekOrders(@RequestParam(name = "weekOffset", defaultValue = "0") int weekOffset,
+                                    HotelOrders hotelOrders) {
+        List<HotelOrders> list = hotelOrdersService.selecWeekHotelOrdersList(weekOffset,hotelOrders);
+        return success(list);
     }
 }
